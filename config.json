@@ -1,6 +1,6 @@
 {
   "DiscordBotToken": "ODQ1NjY0ODE3NTgyODMzNjg1.YKkQvA.okkjFApxBbagtIedCi4DT9Mh28k",
-  "DiscordBotCommandPrefix": "ad.",
+  "DiscordBotCommandPrefix": "&",
   "GitHubAccessToken": "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",
   "GitHubManagerRole": "GH Manager",
   "RepositoryName": "Adapt-Development"
