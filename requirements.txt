@@ -1,0 +1,5 @@
+discord.py
+PyGithub
+PyNaCl
+pandas
+async-timeout
