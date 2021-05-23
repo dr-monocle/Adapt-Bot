@@ -12,13 +12,12 @@ intents.reactions = True
 intents.guilds = True
 intents.messages = True
 
-bot = commands.Bot(
-    command_prefix=configuration['DiscordBotCommandPrefix'], case_insensitive=True, intents=intents)
+bot = commands.Bot(command_prefix=configuration['DiscordBotCommandPrefix'], case_insensitive=True, intents=intents)
 
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(status=discord.Status.idle, activity=discord.Activity(type=discord.ActivityType.watching, name=f"{configuration['DiscordBotCommandPrefix']}help"))
+    await bot.change_presence(status=discord.Status.mro, activity=discord.Activity(type=discord.ActivityType.watching, name=f"{configuration['DiscordBotCommandPrefix']}help"))
     print("Bot ready!")
 bot.remove_command("help")
 
@@ -167,8 +166,6 @@ async def purge(ctx, amount=5, fMessage='true'):
 @commands.has_any_role(844572494132150274, 844944216974557236)
 async def hiring(ctx, mode=None):
 
-    await ctx.message.delete()
-
     if mode is None:
         embed = discord.Embed(title="Hiring Help", description="")
         embed.add_field(name='`create` command',
@@ -180,18 +177,33 @@ async def hiring(ctx, mode=None):
         await ctx.send(embed=embedError)
         await ctx.send(embed=embed)
     elif mode == 'create':
-        category = discord.utils.get(
-            ctx.guild.categories, id=844572495717728296)
-        ticket_num = 1 if len(category.channels) == 1 or len(
-            category.channels) == 0 else len(category.channels)
-        await ctx.guild.create_text_channel(f"room-{ticket_num}", overwrites=None, category=category)
-        embed = discord.Embed(
-            title='Success!', description=f'Channel `room-{ticket_num}` created successfuly.', color=discord.Color.green())
-        await ctx.send(embed=embed)
+
+        if ctx.channel.id == 846053818037829642:
+
+            await ctx.message.delete()
+
+            category = discord.utils.get(
+                ctx.guild.categories, id=844572495717728296)
+            archiveCategory = discord.utils.get(
+                ctx.guild.categories, id=845903157715533845)
+            if len(category.channels) == 1 or len(category.channels) == 0:
+                if len(archiveCategory.channels) == 0:
+                    ticket_num = 1
+                else:
+                    ticket_num = len(archiveCategory.channels) + 1
+            else:
+                ticket_num = len(category.channels) + len(archiveCategory.channels)
+            await ctx.guild.create_text_channel(f"room-{ticket_num}", overwrites=None, category=category)
+            embed = discord.Embed(
+                title='Success!', description=f'Channel `room-{ticket_num}` created successfuly.', color=discord.Color.green())
+            await ctx.send(embed=embed)
     elif mode == 'archive':
+
+        await ctx.message.delete()
+
         category = discord.utils.get(
             ctx.guild.categories, id=844572495717728296)
-        if ctx.channel.category == category and ctx.channel.id != 844572495717728297:
+        if ctx.channel.category == category and ctx.channel.id != 846053818037829642:
             category = discord.utils.get(
                 ctx.guild.categories, id=845903157715533845)
             name = ctx.channel.name
@@ -336,7 +348,7 @@ async def welcome_message(ctx):
     embed.set_thumbnail(
         url='https://cdn.discordapp.com/attachments/842756273392975872/843383573054881812/logo.png')
 
-    embed.set_footer(text='Licensed under the Creative Commons License',
+    embed.set_footer(text='Licenced under the Creative Commons Licence',
                      icon_url='https://probot.media/O31eqftBYL.png')
 
     msg = await ctx.send(embed=embed)
@@ -344,9 +356,35 @@ async def welcome_message(ctx):
     await msg.add_reaction(emoji='✅')
 
 
+"""@bot.command()
+async def chat(ctx):
+
+    await ctx.message.delete()
+
+    embed = discord.Embed(title='Create Hiring Rooms', description='Use the following commands to create/archive hiring chat rooms.')
+
+    embed.add_field(name='__Create__ command', value=f'Use `{configuration["DiscordBotCommandPrefix"]}hiring create` to create a channel.', inline=False)
+    embed.add_field(name='__Archive__ command', value=f'Use `{configuration["DiscordBotCommandPrefix"]}hiring archive` in a specific hiring channel to move that channel to the **📚 HIRE ARCHIVES 📚** category.', inline=False)
+
+    embed.set_author(name='Adapt Development Team',
+                     icon_url='https://cdn.discordapp.com/attachments/842756273392975872/842756454482313226/logo_round.png')
+
+    embed.set_thumbnail(
+        url='https://cdn.discordapp.com/attachments/842756273392975872/843383573054881812/logo.png')
+
+    embed.set_footer(text='Licenced under the Creative Commons Licence',
+                     icon_url='https://probot.media/O31eqftBYL.png')
+
+    msg = await ctx.send(embed=embed)
+
+    await discord.Message.pin(msg)
+
+    await ctx.channel.purge(limit=1)"""
+
+
 @bot.event
-async def on_member_join(ctx, member):
-    Role = discord.utils.get(member.server.roles, name="no-perms")
-    await bot.add_roles(member, Role)
+async def on_member_join(member):
+    role = discord.utils.get(member.guild.roles, name='no-perms')
+    await member.add_roles(role)
 
 bot.run(configuration['DiscordBotToken'])

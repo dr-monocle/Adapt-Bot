@@ -3,3 +3,4 @@ PyGithub
 PyNaCl
 pandas
 async-timeout
+json
