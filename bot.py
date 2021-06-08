@@ -324,7 +324,7 @@ async def help(ctx, arg=None):
         if arg.lower() == 'ban':
             embed = discord.Embed(title="Ban Command Help", description="")
             embed.add_field(
-                name='`ban` command', value=f"{configuration['DiscordBotCommandPrefix']}ban [member] [reason]" inline=False)
+                name='`ban` command', value=f"{configuration['DiscordBotCommandPrefix']}ban [member] [reason]", inline=False)
             await ctx.send(embed=embed)
 
         else:
