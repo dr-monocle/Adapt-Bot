@@ -270,9 +270,9 @@ async def ban(ctx, user: discord.Member = None, reason=None):
     else:
         try:
             if reason is not None:
-                msg = f"You habe been banned from {ctx.guild.name} for `{reason}`."
+                msg = "You have been banned from " + ctx.guild.name + " for `" + reason + "`."
             else:
-                msg = f"You habe been banned from {ctx.guild.name}.""
+                msg = "You have been banned from " + ctx.guild.name + "."
             
             await user.send(message)
             await ctx.guild.ban(user, reason=reason)
