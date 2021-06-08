@@ -256,6 +256,34 @@ async def nick(ctx, user: discord.Member = None, position=None, name=None):
             await ctx.send(embed=embed)
             pass
 
+# BAN COMMAND
+
+@bot.command()
+@commands.has_role(844572494132150274)
+async def ban(ctx, user: discord.Member = None, reason=None):
+    await ctx.message.delete()
+
+    if user is None or user == ctx.message.author:
+        embedError = discord.Embed(
+            title='Bad usage', description='You cannot ban yourself.', color=discord.Color.red())
+        await ctx.send(embed=embedError)
+    else:
+        try:
+            msg = f"You habe been banned from {ctx.guild.name} for `{reason}`." if reason is not None else f"You habe been banned from {ctx.guild.name}.""
+            
+            await user.send(message)
+            await ctx.guild.ban(user, reason=reason)
+            
+            embed = discord.Embed(
+                title='Success!', description=f'Member banned successfuly.', color=discord.Color.green())
+            await ctx.send(embed=embed)
+        except discord.errors.Forbidden:
+            embed = discord.Embed(
+                title='Error!', description=f'Bot has no permissions to ban {user.mention}.```discord.errors.Forbidden: 403 Forbidden (error code: 50013): Missing Permissions```', color=discord.Color.red())
+            await ctx.send(embed=embed)
+            pass
+
+
 # HELP
 
 
@@ -290,6 +318,12 @@ async def help(ctx, arg=None):
                 name='`nick` command', value=f"{configuration['DiscordBotCommandPrefix']}nick [member] [position] [first_name]", inline=False)
             await ctx.send(embed=embed)
 
+        if arg.lower() == 'ban':
+            embed = discord.Embed(title="Ban Command Help", description="")
+            embed.add_field(
+                name='`ban` command', value=f"{configuration['DiscordBotCommandPrefix']}ban [member] [reason]" inline=False)
+            await ctx.send(embed=embed)
+
         else:
             embed = discord.Embed(title="Help", description="")
             embed.add_field(
@@ -310,6 +344,8 @@ async def help(ctx, arg=None):
                         value=f"**{configuration['DiscordBotCommandPrefix']}hiring** | Create/Archive hiring rooms.\n> Check **{configuration['DiscordBotCommandPrefix']}help hiring** or **{configuration['DiscordBotCommandPrefix']}help hire** for more info.", inline=False)
         embed.add_field(name='`nick` command',
                         value=f"**{configuration['DiscordBotCommandPrefix']}nick** | Change the nickname of a  member.\n> Check **{configuration['DiscordBotCommandPrefix']}help nick** for more info.", inline=False)
+        embed.add_field(name='`ban` command',
+                        value=f"**{configuration['DiscordBotCommandPrefix']}ban** | Bans a member from the server.\n> Check **{configuration['DiscordBotCommandPrefix']}help ban** for more info.", inline=False)
         embed.add_field(name='`purge` command',
                         value=f"**{configuration['DiscordBotCommandPrefix']}purge** | Clear certain amount of messages in the current channel.\n> Check **{configuration['DiscordBotCommandPrefix']}help purge** for more info.", inline=False)
         await ctx.send(embed=embed)
