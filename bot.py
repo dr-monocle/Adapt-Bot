@@ -269,7 +269,10 @@ async def ban(ctx, user: discord.Member = None, reason=None):
         await ctx.send(embed=embedError)
     else:
         try:
-            msg = f"You habe been banned from {ctx.guild.name} for `{reason}`." if reason is not None else f"You habe been banned from {ctx.guild.name}.""
+            if reason is not None:
+                msg = f"You habe been banned from {ctx.guild.name} for `{reason}`."
+            else:
+                msg = f"You habe been banned from {ctx.guild.name}.""
             
             await user.send(message)
             await ctx.guild.ban(user, reason=reason)
